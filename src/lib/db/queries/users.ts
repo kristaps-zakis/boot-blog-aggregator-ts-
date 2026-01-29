@@ -5,13 +5,8 @@ import { firstOrUndefined } from "./utils";
 
 
 export async function createUser(name: string) {
-  try {
-    const [result] = await db.insert(users).values({ name: name }).returning();
-    return result;
-  } catch (error: any) {
-    console.error(`Error creating user ${name}:`);
-    throw error;
-  }
+  const [result] = await db.insert(users).values({ name: name }).returning();
+  return result;
 }
 
 export async function getUser(name: string) {
@@ -19,28 +14,16 @@ export async function getUser(name: string) {
   return firstOrUndefined(result);
 }
 
-export async function resetUsersTable() {
+
+export async function deleteUsers() {
   await db.delete(users);
 }
 
-export async function getUsersList() {
-  return await db.select().from(users);
+export async function getUsers() {
+  return db.select().from(users);
 }
 
-
-// export async function createUser(name: string) {
-//   try {
-//     const [result] = await db.insert(users).values( { name: name }).returning();
-//     return result;
-//   } catch (error: any) {
-//     console.error(`Error creating user ${name}:`);
-//     // console.error("Error details:", error);
-//     if (error.cause) {
-//     //   console.error("Cause:", error.cause);
-//     }
-//     if (error.code) {
-//     //   console.error("Code:", error.code);
-//     }
-//     throw error;
-//   }
-// }
+export async function getUserById(id: string) {
+  const result = await db.select().from(users).where(eq(users.id, id));
+  return firstOrUndefined(result);
+}

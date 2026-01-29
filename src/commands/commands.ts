@@ -1,10 +1,13 @@
+// import { readConfig } from "src/config";
+// import { getUser } from "src/lib/db/queries/users";
+import { User } from "src/lib/db/schema";
+
 export type CommandHandler = (
   cmdName: string, 
   ...args: string[]
 ) => Promise<void>;
 
 export type CommandsRegistry = Record<string, CommandHandler>;
-
 
 export function registerCommand (
   registry: CommandsRegistry,
@@ -26,3 +29,23 @@ export async function runCommand(
 
   await handler(cmdName, ...args);
 }
+
+export type UserCommandHandler = (
+  cmdName: string,
+  user: User,
+  ...args: string[]
+) => Promise<void> | void;
+
+
+// export function n(handler: UserCommandHandlerr): CommandHandler {
+//   return async (cmdName: string, ...args: string[]) => {
+//     const config = readConfig();
+//     const user = await getUser(config.currentUserName);
+
+//     if (!user) {
+//       throw new Error(`User ${config.currentUserName} not found`);
+//     }
+
+//     await handler(cmdName, user, ...args);
+//   };
+// }
